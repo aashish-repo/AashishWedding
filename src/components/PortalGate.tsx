@@ -44,6 +44,16 @@ export function PortalGate({ visible, onOpen }: Props) {
 
         <p className="gate__tag">{wedding.portal.tag}</p>
 
+        <img
+          src="/brand/rj-couple.png"
+          alt=""
+          className="rj-sticker rj-sticker--couple"
+          width={320}
+          height={320}
+          decoding="async"
+          aria-hidden="true"
+        />
+
         <button type="button" className="enter" onClick={onOpen}>
           {wedding.portal.cta}
         </button>

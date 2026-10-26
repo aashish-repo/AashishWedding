@@ -28,7 +28,8 @@ export function MusicToggle({ enabled }: Props) {
       <audio
         ref={audioRef}
         src={wedding.themeAudio}
-        preload="none"
+        preload="auto"
+        loop
         onEnded={(e) => {
           const el = e.currentTarget;
           el.currentTime = 0;

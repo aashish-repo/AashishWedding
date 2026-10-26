@@ -50,6 +50,15 @@ export function InviteExperience() {
 
       <main tabIndex={-1} aria-hidden={!entered}>
         <header className="hero hero--announce" aria-label="Wedding announcement">
+          <img
+            src="/brand/rj-camel.png"
+            alt=""
+            className="rj-sticker rj-sticker--camel"
+            width={320}
+            height={240}
+            decoding="async"
+            aria-hidden="true"
+          />
           <div className="announce">
             <div className="announce__side">
               <p className="announce__rel">
@@ -81,7 +90,8 @@ export function InviteExperience() {
               are to be married on Saturday, the 21st of November
             </p>
             <p className="announce__place">
-              Location: Bandhan Resort, Bundi, Rajasthan
+              Location: {wedding.location.venue}, {wedding.location.city},{" "}
+              {wedding.location.state}
             </p>
           </div>
 
@@ -175,6 +185,15 @@ export function InviteExperience() {
 
         <section className="scene center" aria-label="Countdown to the wedding">
           <Reveal>
+            <img
+              src="/brand/rj-pagri.png"
+              alt=""
+              className="rj-sticker rj-sticker--pagri"
+              width={220}
+              height={220}
+              decoding="async"
+              aria-hidden="true"
+            />
             <p className="eyebrow center">Counting the days</p>
           </Reveal>
           <Reveal delay={0.05}>
@@ -238,6 +257,37 @@ export function InviteExperience() {
                   />
                 </svg>
               </span>
+            </div>
+          </Reveal>
+        </section>
+
+        <section className="scene center" aria-label="Venue">
+          <Reveal>
+            <p className="eyebrow center">Where we gather</p>
+          </Reveal>
+          <Reveal delay={0.05}>
+            <h2 className="title">
+              Find us <em>here</em>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <div className="venue">
+              <h3>{wedding.location.venue}</h3>
+              <p className="venue__area">
+                {wedding.location.city}, {wedding.location.state},{" "}
+                {wedding.location.country}
+              </p>
+              <p className="venue__note">
+                Join us at Bandhan Resort for the celebrations.
+              </p>
+              <a
+                className="map-link"
+                href={wedding.location.mapsUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open in Google Maps →
+              </a>
             </div>
           </Reveal>
         </section>

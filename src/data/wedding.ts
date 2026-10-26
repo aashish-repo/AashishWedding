@@ -20,8 +20,7 @@ export const wedding = {
     city: "Bundi",
     state: "Rajasthan",
     country: "India",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Bandhan+Resort+Bundi",
+    mapsUrl: "https://maps.app.goo.gl/nD2pUQacnqENtA1N9",
   },
   families: {
     groom: {
@@ -273,7 +272,7 @@ export const wedding = {
     title: "We can hardly wait",
     body: "To have everyone we love in one place — Thola and Kotiya, together is all we have wished for. Thank you for being part of our story.",
   },
-  themeAudio: "/audio/theme.m4a",
+  themeAudio: "/audio/instrumental.mp3",
 } as const;
 
 export type Wedding = typeof wedding;

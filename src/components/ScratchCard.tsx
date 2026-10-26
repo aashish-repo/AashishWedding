@@ -4,12 +4,13 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 
 type Props = {
   children: ReactNode;
+  onReveal?: () => void;
 };
 
 const CARD_W = 280;
 const CARD_H = 132;
 
-export function ScratchCard({ children }: Props) {
+export function ScratchCard({ children, onReveal }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const drawing = useRef(false);
@@ -102,6 +103,7 @@ export function ScratchCard({ children }: Props) {
       clearedRef.current = true;
       setCleared(true);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      onReveal?.();
     }
   };
 

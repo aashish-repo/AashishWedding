@@ -2,8 +2,19 @@
 
 import { useEffect, useRef } from "react";
 
-/** Falling red rose petal shower for the portal / first page */
-export function RoseShower({ active = true }: { active?: boolean }) {
+type Props = {
+  active?: boolean;
+  /** sky = soft blue petals; rose = red flower blow */
+  tone?: "sky" | "rose";
+  burst?: boolean;
+};
+
+/** Falling petal shower for portal / reveal moments */
+export function RoseShower({
+  active = true,
+  tone = "sky",
+  burst = false,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -35,13 +46,23 @@ export function RoseShower({ active = true }: { active?: boolean }) {
     };
 
     const petals: Petal[] = [];
-    const colors = [
-      "135,206,235",
-      "100,170,210",
-      "70,150,200",
-      "160,215,240",
-      "90,160,205",
-    ];
+    const colors =
+      tone === "rose"
+        ? [
+            "196,30,58",
+            "230,57,80",
+            "180,20,45",
+            "220,70,90",
+            "142,20,40",
+            "255,90,110",
+          ]
+        : [
+            "135,206,235",
+            "100,170,210",
+            "70,150,200",
+            "160,215,240",
+            "90,160,205",
+          ];
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -95,16 +116,22 @@ export function RoseShower({ active = true }: { active?: boolean }) {
 
     const tick = () => {
       ctx.clearRect(0, 0, w, h);
-      const target = Math.min(48, Math.floor(w / 22));
+      const target = burst
+        ? Math.min(72, Math.floor(w / 14))
+        : Math.min(48, Math.floor(w / 22));
       while (petals.length < target) spawn(petals.length > 12);
 
       for (const p of petals) {
         p.sway += p.swaySpeed;
-        p.y += p.vy;
-        p.x += p.vx + Math.sin(p.sway) * 0.55;
+        p.y += p.vy * (burst ? 1.35 : 1);
+        p.x += p.vx + Math.sin(p.sway) * (burst ? 0.85 : 0.55);
         p.rot += p.vr;
         if (p.y > h + 40) {
-          p.y = -30;
+          if (burst) {
+            p.y = -30 - Math.random() * 40;
+          } else {
+            p.y = -30;
+          }
           p.x = Math.random() * w;
         }
         drawRosePetal(p);
@@ -113,6 +140,9 @@ export function RoseShower({ active = true }: { active?: boolean }) {
     };
 
     resize();
+    if (burst) {
+      for (let i = 0; i < 36; i++) spawn(true);
+    }
     window.addEventListener("resize", resize);
     raf = requestAnimationFrame(tick);
 
@@ -120,14 +150,14 @@ export function RoseShower({ active = true }: { active?: boolean }) {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, [active]);
+  }, [active, tone, burst]);
 
   if (!active) return null;
 
   return (
     <canvas
       ref={canvasRef}
-      className="rose-shower"
+      className={`rose-shower${burst ? " rose-shower--fixed" : ""}`}
       aria-hidden="true"
     />
   );

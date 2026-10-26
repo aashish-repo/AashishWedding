@@ -175,6 +175,49 @@ body {
   pointer-events: none;
 }
 
+.rose-shower--fixed {
+  position: fixed;
+  z-index: 40;
+}
+
+
+
+/* Rajasthani stickers — large, noticeable, minimal */
+.rj-sticker {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  /* hide black PNG backgrounds on light pages */
+  mix-blend-mode: screen;
+}
+
+.rj-sticker--couple {
+  width: min(200px, 52vw);
+  height: auto;
+  margin-top: 0.35rem;
+  margin-bottom: 0.15rem;
+  flex-shrink: 1;
+  max-height: 18svh;
+}
+
+.rj-sticker--camel {
+  width: min(240px, 68vw);
+  height: auto;
+  margin: 0 auto 0.95rem;
+  mix-blend-mode: normal;
+  filter: drop-shadow(0 10px 22px rgba(10, 61, 98, 0.14));
+}
+
+.rj-sticker--pagri {
+  width: min(150px, 38vw);
+  height: auto;
+  margin: 0 auto 0.95rem;
+  filter: drop-shadow(0 10px 22px rgba(10, 61, 98, 0.18));
+}
+
 .gate__inner {
   position: relative;
   z-index: 1;
@@ -234,10 +277,7 @@ body {
   display: block;
   width: 2rem;
   height: 1px;
-  background: linear-gradient(90deg,
-      transparent,
-      #0a3d62,
-      transparent);
+  background: linear-gradient(90deg, transparent, #0a3d62, transparent);
 }
 
 .portal-footer__rule span {
@@ -299,6 +339,10 @@ body {
 .enter--ghost:hover {
   background: rgba(234, 245, 251, 0.7);
   filter: none;
+}
+
+.enter--continue {
+  margin-top: 2.75rem;
 }
 
 .sathiya {
@@ -1468,7 +1512,7 @@ footer.scene {
 }
 
 .bg-cta {
-  margin: 1.35rem auto 0;
+  margin: 2.4rem auto 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1516,6 +1560,7 @@ footer.scene {
 }
 
 @keyframes bg-cta-pulse {
+
   0%,
   100% {
     transform: scale(1);
@@ -1533,6 +1578,7 @@ footer.scene {
 }
 
 @keyframes bg-heart-pulse {
+
   0%,
   100% {
     transform: scale(1);
@@ -1546,6 +1592,7 @@ footer.scene {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .bg-cta__btn,
   .bg-cta__heart {
     animation: none;

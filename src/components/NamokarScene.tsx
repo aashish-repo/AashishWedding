@@ -116,7 +116,11 @@ export function NamokarScene({ visible, onFinished }: Props) {
 
         <div className="inv-hint">{hint || "entering…"}</div>
 
-        <button type="button" className="enter enter--ghost" onClick={finish}>
+        <button
+          type="button"
+          className="enter enter--ghost enter--continue"
+          onClick={finish}
+        >
           Continue
         </button>
       </div>

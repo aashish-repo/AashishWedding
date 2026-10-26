@@ -1,13 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Atmosphere } from "@/components/Atmosphere";
+import { RoseShower } from "@/components/RoseShower";
 import { ScratchCard } from "@/components/ScratchCard";
 
 export function BrideGroomPage() {
+  const [bloom, setBloom] = useState(false);
+
   return (
     <div className="invite-root theme-sky couple-page">
       <Atmosphere active tone="sky" />
+      <RoseShower active={bloom} tone="rose" burst />
 
       <main className="couple">
         <Link href="/" className="couple__back">
@@ -29,7 +34,7 @@ export function BrideGroomPage() {
           />
         </figure>
 
-        <ScratchCard>
+        <ScratchCard onReveal={() => setBloom(true)}>
           <div className="scratch__notes">
             <div className="scratch__note">
               <p className="scratch__note-label">In his words</p>
