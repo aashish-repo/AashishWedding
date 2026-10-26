@@ -6,6 +6,9 @@ type Props = {
   children: ReactNode;
 };
 
+const CARD_W = 280;
+const CARD_H = 132;
+
 export function ScratchCard({ children }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -21,8 +24,8 @@ export function ScratchCard({ children }: Props) {
 
     const rect = wrap.getBoundingClientRect();
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const w = Math.max(280, Math.floor(rect.width));
-    const h = Math.max(220, Math.floor(rect.height));
+    const w = Math.max(CARD_W, Math.floor(rect.width));
+    const h = CARD_H;
 
     canvas.width = Math.floor(w * dpr);
     canvas.height = Math.floor(h * dpr);
@@ -41,35 +44,35 @@ export function ScratchCard({ children }: Props) {
     ctx.fillRect(0, 0, w, h);
 
     ctx.fillStyle = "rgba(255,255,255,0.22)";
-    for (let i = 0; i < 22; i++) {
+    for (let i = 0; i < 14; i++) {
       const x = (i * 47) % w;
       const y = (i * 31) % h;
       ctx.beginPath();
-      ctx.arc(x, y, 10 + (i % 5), 0, Math.PI * 2);
+      ctx.arc(x, y, 8 + (i % 4), 0, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.fillStyle = "rgba(255,255,255,0.95)";
-    ctx.font = `600 ${Math.max(14, Math.floor(w * 0.045))}px var(--font-body), sans-serif`;
+    ctx.font = `600 14px var(--font-body), sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText("Scratch to reveal 💙", w / 2, h / 2);
 
     setReady(true);
-    setCleared(false);
   }, []);
 
   useEffect(() => {
+    if (cleared) return;
     const id = window.setTimeout(() => paintCover(), 40);
     const onResize = () => {
-      if (!drawing.current) paintCover();
+      if (!drawing.current && !clearedRef.current) paintCover();
     };
     window.addEventListener("resize", onResize);
     return () => {
       window.clearTimeout(id);
       window.removeEventListener("resize", onResize);
     };
-  }, [paintCover]);
+  }, [paintCover, cleared]);
 
   const scratchAt = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
@@ -80,7 +83,7 @@ export function ScratchCard({ children }: Props) {
     const rect = canvas.getBoundingClientRect();
     const x = clientX - rect.left;
     const y = clientY - rect.top;
-    const radius = Math.max(24, rect.width * 0.08);
+    const radius = Math.max(20, rect.width * 0.1);
 
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
@@ -90,12 +93,12 @@ export function ScratchCard({ children }: Props) {
 
     const sample = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     let transparent = 0;
-    const step = 16;
+    const step = 12;
     for (let i = 3; i < sample.length; i += 4 * step) {
       if (sample[i] < 40) transparent++;
     }
     const total = sample.length / (4 * step);
-    if (transparent / total > 0.48) {
+    if (transparent / total > 0.42) {
       clearedRef.current = true;
       setCleared(true);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -114,49 +117,53 @@ export function ScratchCard({ children }: Props) {
   };
 
   return (
-    <div className="scratch" ref={wrapRef}>
-      <div className="scratch__prize" aria-hidden={cleared ? undefined : true}>
-        {children}
-      </div>
-      <canvas
-        ref={canvasRef}
-        className={`scratch__cover${cleared ? " is-gone" : ""}`}
-        style={{ opacity: ready ? 1 : 0 }}
-        onMouseDown={(e) => {
-          drawing.current = true;
-          const p = pointFromEvent(e);
-          if (p) scratchAt(p.x, p.y);
-        }}
-        onMouseMove={(e) => {
-          if (!drawing.current) return;
-          const p = pointFromEvent(e);
-          if (p) scratchAt(p.x, p.y);
-        }}
-        onMouseUp={() => {
-          drawing.current = false;
-        }}
-        onMouseLeave={() => {
-          drawing.current = false;
-        }}
-        onTouchStart={(e) => {
-          drawing.current = true;
-          const p = pointFromEvent(e);
-          if (p) scratchAt(p.x, p.y);
-        }}
-        onTouchMove={(e) => {
-          e.preventDefault();
-          if (!drawing.current) return;
-          const p = pointFromEvent(e);
-          if (p) scratchAt(p.x, p.y);
-        }}
-        onTouchEnd={() => {
-          drawing.current = false;
-        }}
-        aria-label="Scratch card. Scratch to reveal a message."
-      />
+    <div
+      className={`scratch${cleared ? " is-revealed" : " is-compact"}`}
+      ref={wrapRef}
+    >
       {!cleared ? (
-        <p className="scratch__hint">Scratch gently with your finger</p>
-      ) : null}
+        <>
+          <canvas
+            ref={canvasRef}
+            className="scratch__cover"
+            style={{ opacity: ready ? 1 : 0 }}
+            onMouseDown={(e) => {
+              drawing.current = true;
+              const p = pointFromEvent(e);
+              if (p) scratchAt(p.x, p.y);
+            }}
+            onMouseMove={(e) => {
+              if (!drawing.current) return;
+              const p = pointFromEvent(e);
+              if (p) scratchAt(p.x, p.y);
+            }}
+            onMouseUp={() => {
+              drawing.current = false;
+            }}
+            onMouseLeave={() => {
+              drawing.current = false;
+            }}
+            onTouchStart={(e) => {
+              drawing.current = true;
+              const p = pointFromEvent(e);
+              if (p) scratchAt(p.x, p.y);
+            }}
+            onTouchMove={(e) => {
+              e.preventDefault();
+              if (!drawing.current) return;
+              const p = pointFromEvent(e);
+              if (p) scratchAt(p.x, p.y);
+            }}
+            onTouchEnd={() => {
+              drawing.current = false;
+            }}
+            aria-label="Scratch card. Scratch to reveal a message."
+          />
+          <p className="scratch__hint">Scratch gently with your finger</p>
+        </>
+      ) : (
+        <div className="scratch__prize">{children}</div>
+      )}
     </div>
   );
 }
